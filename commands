@@ -11,6 +11,12 @@ sudo docker rmi $(sudo docker images -f "dangling=true" -q)
 # start clusterdock
 clusterdock_run ./bin/start_cluster cdh --include-service-types=ZOOKEEPER,HDFS,HTTPFS,YARN,HIVE,OOZIE,HUE --primary-node=node1 --secondary-node=node2
 
+
+# get dm and hue ports
+sudo netstat -tulpn | grep docker-proxy
+sudo netstat -tulpn | grep docker | tr -s ' ' | cut -d ' ' -f 4 | sed 's/:*//g'
+
+
 # clean all docker images not running
 sudo docker rm $(sudo docker ps -a -q)
 
