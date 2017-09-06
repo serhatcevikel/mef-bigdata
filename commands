@@ -1,3 +1,6 @@
+# source clusterdock
+source /home/ubuntu/clusterdock/clusterdock.sh
+
 # flush/nuke clusterdock  container
 clusterdock_run ./bin/housekeeping nuke
 
