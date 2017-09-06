@@ -7,6 +7,9 @@ ctrl+shft+t
 # switch between terminal tabs
 ctrl+pgup/pgdown
 
+# gui text editor
+leafpad <file> &
+
 # source clusterdock
 source /home/ubuntu/clusterdock/clusterdock.sh
 
@@ -20,11 +23,20 @@ sudo docker rmi $(sudo docker images -f "dangling=true" -q)
 # start clusterdock
 clusterdock_run ./bin/start_cluster cdh --include-service-types=ZOOKEEPER,HDFS,HTTPFS,YARN,HIVE,OOZIE,HUE --primary-node=node1 --secondary-node=node2
 
-
 # get dm and hue ports
 sudo netstat -tulpn | grep docker-proxy
 sudo netstat -tulpn | grep docker | tr -s ' ' | cut -d ' ' -f 4 | sed 's/:*//g'
 
+# link to cm and hue
+localhost:<port>
+
+# login to cm
+admin
+admin
+
+# login to hue
+ubuntu
+ubuntu
 
 # clean all docker images not running
 sudo docker rm $(sudo docker ps -a -q)
@@ -38,15 +50,12 @@ sudo docker exec -it "first three digits of the id of running container" bash
 # UNIX way word count
 cat home/ubuntu/mef/01-mapreduce-01/googlebooks-eng-all-1gram-20120701-3 | wc -w
 
-
 # job 1
 mapper cat
 reducer	wc -w
 
 mapred.input.dir input
 mapred.output.dir output1
-
-
 
 # job 2
 mapper cat
@@ -56,8 +65,6 @@ mapred.input.dir output1
 mapred.output.dir output2
 
 mapred.reduce.tasks 1
-
-
 
 # inside docker shell, confirm
 hadoop fs -get /output2 .
