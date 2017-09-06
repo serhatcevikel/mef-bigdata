@@ -1,3 +1,12 @@
+# open terminal
+ctrl+alt+t
+
+# open tab in terminal
+ctrl+shft+t
+
+# switch between terminal tabs
+ctrl+pgup/pgdown
+
 # source clusterdock
 source /home/ubuntu/clusterdock/clusterdock.sh
 
