@@ -10,7 +10,7 @@ in_path <- sprintf("%s/data/imdb/tsv/title.principals.tsv", prefix) # create the
 
 principals <- fread(in_path) # fast read input file into DT
 
-# split 2nf field, replicate 1st field length of split times
+# split 2nd field, replicate 1st field length of split times
 principals_molten <- principals[, {principalCast_list = strsplit(principalCast, ",");
                                     list(tconst = rep(tconst, sapply(principalCast_list, length)),
                                          principalCast = unlist(principalCast_list))}]
