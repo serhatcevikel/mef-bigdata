@@ -1,0 +1,147 @@
+# NOTES:
+# Paths to files are discretionary, you may change them to your liking and the directory structure of your pc
+# Paths use UNIX slashes "/", in windows slashes in pathnames are backslashes "\"
+# You can download the data for the first session by folloying the link: https://drive.google.com/drive/folders/0BwIIUHwUSV2MYm9XYnJ4bEl5Zm8
+
+
+
+# install data.table package in R to transform the dataset files
+R --vanilla <<-HERE
+    mirid <- match("tr", getCRANmirrors()[,8])
+    chooseCRANmirror(graphics=FALSE, ind=mirid)
+    if (!require('data.table', character.only = T, quietly = T)) {
+        install.packages('data.table')
+    }
+q()
+HERE
+
+# define a variable for dataset
+dataset01="/home/bda505/mef/01/Session_01_dataset"
+
+# prepare the database
+# execute as bda505
+sudo -i -u bda505 /bin/bash - <<-EOF
+
+# extract data files
+mkdir $dataset01/gz
+mv $dataset01/*.gz $dataset01/gz
+mkdir $dataset01/tsv
+gunzip -k $dataset01/gz/*.gz
+mv $dataset01/gz/*.tsv $dataset01/tsv
+
+## profile the dataset with UNIX tools
+
+# list human readable sizes
+cd $dataset01/tsv
+ls -lSh
+
+# get row counts of files
+find . -mindepth 1 | while read line; do printf "%s\t" $line ;\
+ cat $line | wc -l | numfmt --to=iec; done
+
+# get column counts of files
+find . -mindepth 1 | while read line; do printf "%s\t" $line ; head -1 $line | wc -w; done
+
+# get head rows of files
+find . -mindepth 1 | while read line; do printf "%s\n" $line ; head -2 $line | column -t -s $'\t'; echo ""; done
+
+# get unique values of end years
+awk 'BEGIN{FS="\t"} {print $7}' title.basics.tsv | sort | uniq | pr -8 -t
+
+# get the counts of unique values of end years, sorted by counts
+awk 'BEGIN{FS="\t"} {print $7}' title.basics.tsv | sort | uniq -c | sort -nr | column -c 100
+
+# return the id, name and year of titles which include The Godfather and Part words
+awk 'BEGIN{FS="\t"} $3 ~ /The Godfather.*Part/ { print $1,$3,$6}' title.basics.tsv 
+
+# join title.crew and title.basics, matching the title id's, adding director id column to the title.basics and returnin the title id, title name, year and director id
+awk 'NR==FNR{a[$1]=$2OFS;next}{$10=a[$1];print $1,$3,$6,$10}' OFS='\t' title.crew.tsv title.basics.tsv | head  | column -t
+
+# delete the first line in title.basics
+cat $dataset01/tsv/title.basics.tsv | tail -n+2 > $dataset01/tsv/title.basics2.tsv
+
+## melt the title.principals.tsv table (split each principal cast into a separate line)
+R --vanilla <<-HERE
+library(data.table) # load data.table package
+
+prefix <- "/home/bda505/mef/01/Session_01_dataset" # get the environment variable - a path prefix - "fls"
+in_path <- sprintf("%s/tsv/title.principals.tsv", prefix) # create the path to input file
+
+principals <- fread(in_path) # fast read input file into DT
+
+# split 2nd field, replicate 1st field length of split times
+principals_molten <- principals[, {principalCast_list = strsplit(principalCast, ",");
+                                    list(tconst = rep(tconst, sapply(principalCast_list, length)),
+                                         principalCast = unlist(principalCast_list))}]
+
+
+out_path <- sprintf("%s/tsv/title.principals2.tsv", prefix) # create output file path
+
+fwrite(principals_molten, file = out_path, sep = "\t") # fast write new DT as tsv
+HERE
+
+EOF
+
+
+## make postgresql up and running
+
+echo "postgres:bda505" | chpasswd # change password of postgres
+
+# create en empty directory for tablespace
+mkdir /home/bda505/pg
+
+# change the ownership of the tablespace directory to postgres user
+chown -R postgres:postgres /home/bda505/pg
+
+# enable (make persistent across boots) and start postgresql daemon
+systemctl enable postgresql.service
+systemctl start postgresql.service
+
+# commands to be executed as postgres user
+sudo -i -u postgres /bin/bash - <<-EOF
+
+# create an initial empty database
+createdb mydb
+
+# initial actions
+psql -U postgres -d mydb <<-EOF2
+
+# create a new tablespace
+CREATE TABLESPACE pg LOCATION '/home/bda505/pg';
+
+# change the password of postgres user
+# note that this is database user
+# previous one was operating system user
+ALTER USER postgres WITH PASSWORD 'bda505';
+
+# create a new empty database imdb in pg tablespace
+CREATE DATABASE imdb
+WITH OWNER = postgres
+ENCODING = 'UTF8'
+TABLESPACE = pg
+LC_COLLATE = 'en_US.UTF-8'
+LC_CTYPE = 'en_US.UTF-8'
+CONNECTION LIMIT = -1;
+EOF2
+
+# actions to be executed inside imdb database
+psql -U postgres -d imdb <<-EOF2
+
+# create an empty table for title_basics
+CREATE TABLE title_basics
+(
+  tconst text,
+  titleType text,
+  primaryTitle text,
+  originalTitle text,
+  isAdult boolean,
+  startYear integer,
+  endYear integer,
+  runtimeMinutes integer,
+  genres text
+);
+
+# import data from the tsv file into the table
+COPY title_basics FROM '$dataset01/tsv/title.basics2.tsv';
+EOF2
+EOF
