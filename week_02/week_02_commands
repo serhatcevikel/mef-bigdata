@@ -19,13 +19,473 @@
 # And commands for other system tools into terminal window which you can open with Ctrl+Alt+T
 # Note that the terminal is a program that emulates the "physical" terminals that were used in order to send commands to computers back in 70's
 # The actual program running inside a terminal is called a "shell": It is a command line interpreter and main tool to communicate with the operating system
+# So the "terminal" is like the body and the "shell" is like the soul running inside the body
+
 # There are many type of shell programs written for *nix and Linux environment
 # The default shell in Linux is Bash (Bourne Again SHell)
+# A good feature of Bash is its extensive customizability through environment variables, shell functions, aliases and shell options
+# For example globbing options make it easier to manipulate multiple files/directories
+# Completion allows one two type the first few letters of a command or filename and complete the rest with a tab stroke
+
 # Ability to manipulate the computer by entering interactive commands into the shell is one level higher than interacting with the GUIs:
 # You can control/fine tune your commands with many options/flags/arguments
 # You can save those commands to recreate same steps later easily
 # You can combine those commands into a coherent whole called "scripts" that runs as a non-interactive program that requires no user interaction: So you can automate everything on PC
+# And scripting is the next level in human-PC interaction
+# The environment that you are working now at Lab 409 computers were completely constructed with shell scripts without any interaction
+
+# You can copy and paste commands from this text file into pgAdmin easily by Ctrl+C and Ctrl+V
+# In order to paste into terminal window you need a third key: Shift+Ctrl+V
+# If you don't want to deal with simultaneous key strokes, I included an alias (a kind of shortcut) command in your environment called "xclipe":
+# If you copy a line of command to be executed in shell from this file, you can type "xclipe" on the terminal window.
+# That will first print the command, and then the output to that command 
+
+
+## A short tour of our environment:
+## Our current environment has the following components:
+
+# pgAdmin III GUI client for PostgreSQL:
+# On the terminal execute:
+
+pgadmin3 &
+
+# The ampersand sign ("&") after the command makes the terminal windows available after the command is sent, when the command opens a detached GUI windows
+# GUI is the abbrevation of "graphical user interface"
+# Note that you should not put and & at the end of commands that operate inside the shell without GUI windows - hence they are called CLI (command line interfaces)
+# Otherwise the program runs in the background
+
+# Back to pgadmin3
+# This is our main client to interact with PostreSQL server and create and manipulate databases
+
+# Sometimes SQL language does not suffice: Although advanced features like procedural languages extend SQL beyond its querying capabilities
+# It is better and easier to create more complicated procedures using a high level language such as R or Python - and still interact with PostgreSQL server
+# We have rstudio in order to write, debug and execute R code:
+# On the terminal execute:
+rstudio &
+
+# To start a "vanilla" R console on the terminal:
+
+R
+
+# quit R console:
+
+q()
+
+# We have PyCharm to write, debug and execute Python code:
+
+pycharm &
+
+# Note that if any program has letters "py" in it, it is strongly probable that, it is a module/program written in/for Python language
+
+# Although those IDE's (integrated development environments) like rstudio and PyCharm have built-in text editor
+# Sometimes you may need a powerful, light and highly configurable/customizable/extensible text editor for editing your code
+# With features such as syntax highlighting, block folding, autocompletion, etc.
+# That is efficient to work with, using a set of keyboard shortcuts
+# There are two such programs in *nix/Linux environments: Emacs and Vim
+# In our environments, Vim program is available
+# On the terminal execute:
+
+vim
+
+# to enter editing mode
+
+i
+
+# to exit editing mode and enter command mode (commands are one/two letter shortcuts called key bindings in vim!)
+
+[Esc]
+
+# quit vim without saving (first enter command mode by [Esc]) 
+
+:q!
+
+# According to the following blog post, "How to exit Vim editor" is among the most frequently asked questions on stackoverflow:
+# By the way our default web browser is Firefox:
+
+firefox https://stackoverflow.blog/2017/05/23/stack-overflow-helping-one-million-developers-exit-vim/ &
+
+# Unfortunately, Turkey is the second country to be most frequent asker of that question! From now on, you know how to quit Vim!
+# Vim is so ubiquitous in coding/data world that, many programs/editors/IDE's - including Bash and rstudio - provide an option to accept Vim key bindings
+
+# And sometimes we would like to prototype our code in short snippets and see the output of each snippet in a linear fashion along with the code
+# Jupyter is a perfect tool for such kind of a development approach
+# On the terminal:
+
+jupyter notebook
+
+# See, a browser windows is automatically opened
+# Now you can check "New" on the right top and select Python, R or Bash (Shell interpreter for Linux) so that a new "kernel" for that language is initiated
+# Note that the number of languages for which a kernel for Jupyter is written increases quickly
+# Some other languages which have available Jupyter kernels are Javascript, Julia, Perl, PHP, Scheme, Common Lisp and even C++ !!!
 
 
 
-# This week we start with 
+# This week we will go on manipulating the imdb dataset
+# Make sure pgAdmin III is open,
+# The server connection as depicted on the 71st slide of 01-rdbms-sql-01.pdf is opened
+# "imdb" database is highlighted from the object browser
+# And SQL editor is activated
+# It is better that you also have an open terminal window
+# Don't forget to put a semicolon (";") at the end of each SQL statement!
+# After each command, right click on the object browser and hit "refresh" so that you see the result of commands
+
+# Note that, latest version of PostgreSQL available is 10, released in 5th of October - just a week ago.
+# However in *ubuntu repos, this latest verison is not updated yet, and latest available version is 9.6 - released on the 31th of August, 2017.
+# So we will refer to the official documentation of the 9.6 version at:
+# On the terminal:
+
+firefox https://www.postgresql.org/docs/9.6/static/index.html &
+
+# Because of the way your working environment is configured, the OS will check for the new version of all packages/programs installed through "apt" package manager on every reboot by a cron job
+# In order to check the current version of PostgreSQL server (not the client interface pgAdmin III):
+# On SQL editor:
+
+SELECT version();
+
+# The output is:
+# "PostgreSQL 9.6.5 on x86_64-pc-linux-gnu, compiled by gcc (Ubuntu 6.3.0-12ubuntu2) 6.3.0 20170406, 64-bit"
+
+
+
+## First let's delete the table "title_basics" we had created at the end of the last session with "DROP TABLE" command:
+# On SQL editor:
+
+DROP TABLE title_basics;
+
+# According to PostgreSQL official documentation: "DROP TABLE removes tables from the database"
+
+# The output is sth like:
+# Query returned successfully with no result in 27 msec.
+# For more info on DROP TABLE:
+# On the terminal:
+
+firefox https://www.postgresql.org/docs/9.6/static/sql-droptable.html &
+
+
+# Now we have no more tables left in our database, so the database size should be minimal
+# Let's check the database size with "SELECT" command and system administration functions:
+# On SQL editor:
+
+SELECT pg_size_pretty(pg_database_size('imdb'));
+
+# Output is:
+# "7087 kB"
+
+# Note that:
+# pg_database_size(name) 	bigint 	Disk space used by the database with the specified name
+# pg_size_pretty(bigint) 	text 	Converts a size in bytes expressed as a 64-bit integer into a human-readable format with size units
+
+# For further information on system administration functions, follow:
+
+firefox https://www.postgresql.org/docs/9.6/static/functions-admin.html &
+
+
+# As new data is written, and existing data is modified and/or deleted from the database, some garbage is collected inside the database because of "dead tuples" - deleted records that still occupy a space on disk
+# We should periodically "maintain" our database by at least cleaning the garbage by "VACUUM" command:
+# On SQL editor:
+
+VACUUM FULL;
+
+# According to PostgreSQL official documentation: "VACUUM reclaims storage occupied by dead tuples."
+# "In normal PostgreSQL operation, tuples that are deleted or obsoleted by an update are not physically removed from their table;
+# "they remain present until a VACUUM is done"
+# More info on VACUUM command at:
+
+firefox https://www.postgresql.org/docs/9.6/static/sql-vacuum.html &
+
+# Output is:
+# Query returned successfully with no result in 1.6 secs.
+
+# Now rerun the previous command:
+# On SQL editor:
+
+SELECT pg_size_pretty(pg_database_size('imdb'));
+
+# Output is:
+# "5833 kB"
+
+# Now let's repeat the command to create an empty table with necessary fields (with types):
+# On SQL editor:
+
+CREATE TABLE title_basics
+(
+  tconst text,
+  titleType text,
+  primaryTitle text,
+  originalTitle text,
+  isAdult boolean,
+  startYear integer,
+  endYear integer,
+  runtimeMinutes integer,
+  genres text
+);
+
+# According to PostgreSQL official documentation: "CREATE TABLE will create a new, initially empty table in the current database."
+# "The table will be owned by the user issuing the command."
+# More info on "CREATE TABLE" command at:
+
+firefox https://www.postgresql.org/docs/9.6/static/sql-createtable.html &
+
+# Output is:
+# Query returned successfully with no result in 23 msec.
+
+# Now let's import data from file again:
+# On SQL editor:
+
+COPY title_basics FROM '/home/bda505/mef/01/Session_01_dataset/tsv/title.basics2.tsv';
+
+# According to PostgreSQL official documentation: "COPY moves data between PostgreSQL tables and standard file-system files."
+# "COPY TO copies the contents of a table to a file, while COPY FROM copies data from a file to a table (appending the data to whatever is in the table already)."
+# More info on COPY at:
+
+firefox https://www.postgresql.org/docs/9.6/static/sql-copy.html &
+
+# Output is:
+# Query returned successfully: 4534354 rows affected, 7.1 secs execution time.
+
+# We can preview the head of the imported data from right clicking the table from object browser and clicking View Data
+# But let's do it the SQL way with a SELECT command:
+# On SQL editor:
+
+SELECT *
+FROM title_basics
+LIMIT 5;
+
+# According to PostgreSQL official documentation: "SELECT retrieves rows from zero or more tables."
+# Select is a very versatile command that we will use extensively
+# More information at:
+
+firefox https://www.postgresql.org/docs/9.6/static/sql-select.html &
+
+# In plain english, this command says:
+# Select all ("*") columns
+# From the "title_basics" table
+# And limit the output to just 5 rows
+
+# The message output is:
+# Total query runtime: 13 msec
+# 5 rows retrieved.
+
+# And data output is:
+# "tt0000001";"short";"Carmencita";"Carmencita";f;1894;;1;"Documentary,Short"
+# "tt0000002";"short";"Le clown et ses chiens";"Le clown et ses chiens";f;1892;;5;"Animation,Short"
+# "tt0000003";"short";"Pauvre Pierrot";"Pauvre Pierrot";f;1892;;4;"Animation,Comedy,Romance"
+# "tt0000004";"short";"Un bon bock";"Un bon bock";f;1892;;;"Animation,Short"
+# "tt0000005";"short";"Blacksmith Scene";"Blacksmith Scene";f;1893;;1;"Short"
+
+# Now let's say we want to "clear" the table off its data without deleting the table itself using "DELETE" or "TRUNCATE" commands
+# "DELETE" is a general command that can delete any rows selected on "WHERE" clause
+# whereas "TRUNCATE" flushes all data in the table and is a specific command for this purpose and is faster for deleting all data
+
+# First "DELETE" all data:
+
+DELETE FROM title_basics;
+
+# Output is:
+# Query returned successfully: 4534354 rows affected, 7.7 secs execution time.
+# This is even slower than the time to copy the data into the db
+
+# According to PostgreSQL official documentation:
+# "DELETE deletes rows that satisfy the WHERE clause from the specified table."
+# "If the WHERE clause is absent, the effect is to delete all rows in the table. The result is a valid, but empty table."
+# More info at:
+
+firefox https://www.postgresql.org/docs/9.6/static/sql-delete.html &
+
+# Now let's import the data again with the same command:
+
+COPY title_basics FROM '/home/bda505/mef/01/Session_01_dataset/tsv/title.basics2.tsv';
+
+# Output is:
+# Query returned successfully: 4534354 rows affected, 7.5 secs execution time.
+
+# Now do the "flushing" with "TRUNCATE" statement:
+
+TRUNCATE title_basics;
+
+# Output is:
+# Query returned successfully with no result in 1.1 secs.
+# See, that's much faster!
+
+# According to PostgreSQL official documentation:
+# "TRUNCATE quickly removes all rows from a set of tables. It has the same effect as an unqualified DELETE on each table, but since it does not actually scan the tables it is faster."
+# "Furthermore, it reclaims disk space immediately, rather than requiring a subsequent VACUUM operation. This is most useful on large tables."
+# For more info:
+
+firefox https://www.postgresql.org/docs/9.6/static/sql-truncate.html &
+
+# Now first VACUUM and import the data again
+# Note that VACUUM throws an error when executed together with another SQL command. It must be executed separately
+# On SQL editor:
+
+VACUUM FULL;
+
+# Output:
+# Query returned successfully with no result in 6.2 secs.
+
+
+# On SQL editor:
+COPY title_basics FROM '/home/bda505/mef/01/Session_01_dataset/tsv/title.basics2.tsv';
+
+# Output:
+# Query returned successfully: 4534354 rows affected, 6.0 secs execution time.
+
+# Now, with a mistake, run the query again!
+COPY title_basics FROM '/home/bda505/mef/01/Session_01_dataset/tsv/title.basics2.tsv';
+
+
+# Great, but we forgot sth:
+# Define a primary key on the table and put a constraint on the uniqueness of that key
+# But no problem we can ALTER anything in the table after it is first created
+# On SQL editor:
+
+ALTER TABLE title_basics
+ADD CONSTRAINT tconst_pk 
+PRIMARY KEY (tconst);
+
+# According to PostgreSQL official documentation:
+# "ALTER TABLE changes the definition of an existing table."
+# For more info:
+
+firefox https://www.postgresql.org/docs/9.6/static/sql-altertable.html &
+
+# But the execution of the statement throws an error:
+
+# ERROR:  could not create unique index "tconst_pk"
+# DETAIL:  Key (tconst)=(tt0000001) is duplicated.
+# ********** Error **********
+#
+# ERROR: could not create unique index "tconst_pk"
+# SQL state: 23505
+# Detail: Key (tconst)=(tt0000001) is duplicated.
+
+# It seems that tconst field - that is supposed to be unique, is not unique!
+
+# First, let's get the row count of the table using SQL
+
+SELECT count(*) FROM title_basics;
+
+# 9068708
+
+# We remember from our shell commands that, the true size of the table is half of that
+# Since we did not define the primary key before the data is imported, the query did not make a uniqueness check on the data based on a key
+
+# The query to find distinct values to delete duplicates takes too much time and we are at the beginning of our data life cycle!
+# So it is much better to delete the table
+# Recreate it with primary key constraint
+# And import data
+
+# On SQL editor:
+
+DROP TABLE title_basics;
+
+CREATE TABLE title_basics
+(
+  tconst text,
+  titleType text,
+  primaryTitle text,
+  originalTitle text,
+  isAdult boolean,
+  startYear integer,
+  endYear integer,
+  runtimeMinutes integer,
+  genres text,
+
+CONSTRAINT tconst_pk
+   PRIMARY KEY (tconst)
+
+);
+
+COPY title_basics FROM '/home/bda505/mef/01/Session_01_dataset/tsv/title.basics2.tsv';
+
+# Output:
+# Query returned successfully: 4534354 rows affected, 26.1 secs execution time.
+
+# Because of the uniqueness check in primary key, this time the query takes more time
+
+Let's compare this row count with that of the input file:
+# On shell:
+
+cat $dataset01/tsv/title.basics2.tsv | wc -l
+
+# Output:
+# 4534354
+
+# We see that tconst was in fact a field that satisfies uniquenes condition
+
+# Now let's try to import the data again into the table!
+# On SQL editor:
+
+COPY title_basics FROM '/home/bda505/mef/01/Session_01_dataset/tsv/title.basics2.tsv';
+
+# Output:
+# ERROR:  duplicate key value violates unique constraint "tconst_pk"
+# DETAIL:  Key (tconst)=(tt0000001) already exists.
+# CONTEXT:  COPY title_basics, line 1
+#
+# ********** Error **********
+#
+# ERROR: duplicate key value violates unique constraint "tconst_pk"
+# SQL state: 23505
+# Detail: Key (tconst)=(tt0000001) already exists.
+# Context: COPY title_basics, line 1
+
+# This time duplicate values are not allowed
+
+# Check the row count again:
+# On SQL editor:
+
+SELECT count(*) FROM title_basics;
+
+# Output:
+# 4534354
+
+# The row number is the same, no duplicate records were imported
+
+# Now check size of db, VACUUM and check size again:
+
+SELECT pg_size_pretty(pg_database_size('imdb'));
+
+# "659 MB"
+
+VACUUM FULL;
+
+# Query returned successfully with no result in 9.9 secs.
+
+SELECT pg_size_pretty(pg_database_size('imdb'));
+
+# "659 MB"
+
+# So not much dead tuples yet!
+
+
+# Now we'll go on importing other tables in our datasets, first deleting the first lines:
+# For each file in the dataset we will
+# - First delete the first line and save it into a file with 2 suffix
+# - Then get the line counts for the two files
+# - And print the differences between two files
+
+# On shell we have written a shell scripts as such:
+
+#!/bin/bash
+
+files=( $(find $dataset01/tsv/ -mindepth 1 | grep -Pe ".*[^2]\.tsv") ) # get tsv files that do not end with "2"
+for line in "${files[@]}"; # across the selected filenames
+	do
+		echo -e "$line\n"; # echo file name
+		line2=${line/.tsv/2.tsv}; # create file name to be saved into, ending with 2
+		cat $line | tail -n+2 > $line2; # delete the first line and save into file 2
+		echo -e "$line\n"; # print original file name
+		cat $line | wc -l; # print line count of original file
+		echo -e "$line2\n"; # print new file name
+		cat $line2 | wc -l; # print line count of new file
+		diff $line $line2; # print the differences between first and second files
+	done
+
+# We save in to delete_first_lines.sh
+# We make this script executable by:
+chmod +x delete_first_lines.sh
+
+# And execute it from the path:
+./delete_first_lines.sh
+

@@ -142,6 +142,6 @@ CREATE TABLE title_basics
 );
 
 # import data from the tsv file into the table
-COPY title_basics FROM '$dataset01/tsv/title.basics2.tsv';
+COPY title_basics FROM '/home/bda505/mef/01/Sesssion_01_dataset/tsv/title.basics2.tsv';
 EOF2
 EOF
