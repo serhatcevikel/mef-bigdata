@@ -64,7 +64,7 @@ cat $dataset01/tsv/title.basics.tsv | tail -n+2 > $dataset01/tsv/title.basics2.t
 R --vanilla <<-HERE
 library(data.table) # load data.table package
 
-prefix <- "/home/bda505/mef/01/Session_01_dataset" # get the environment variable - a path prefix - "fls"
+prefix <- Sys.getenv("dataset01") # get the environment variable - a path prefix - "fls"
 in_path <- sprintf("%s/tsv/title.principals.tsv", prefix) # create the path to input file
 
 principals <- fread(in_path) # fast read input file into DT
@@ -75,7 +75,7 @@ principals_molten <- principals[, {principalCast_list = strsplit(principalCast, 
                                          principalCast = unlist(principalCast_list))}]
 
 
-out_path <- sprintf("%s/tsv/title.principals2.tsv", prefix) # create output file path
+out_path <- sprintf("%s/tsv/title.principals_melt.tsv", prefix) # create output file path
 
 fwrite(principals_molten, file = out_path, sep = "\t") # fast write new DT as tsv
 HERE
