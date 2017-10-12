@@ -1,0 +1,31 @@
+## Recap:
+
+# Our imdb dataset has 6 tsv files:
+# title.basics.tsv: Info on titles (id, name, year, runtime, genre, etc)
+# title.crew.tsv: Director and writer info for titles
+# title.episode.tsv: TV episode info
+# title.principals.tsv: Principal cast for titles
+# Note that we created a second file called "title.principals2.tsv" which splits cast into separate lines
+# title.ratings.tsv: IMDB rating and votes
+# name.basics.tsv: id, name of person, birth-death years and primary profession
+
+# In Week 01, we first created an empty table named title_basics using CREATE TABLE command
+# And imported data from title.basics.tsv using COPY command
+# You can view necessary commands to replicate current situation at week_01_commands file
+
+
+# We will enter all SQL commands into pgAdmin SQL editor
+# However, SQL commands can also be executed non-interactively through psql command on the shell. You can view those commands in week_01_commands file
+# And commands for other system tools into terminal window which you can open with Ctrl+Alt+T
+# Note that the terminal is a program that emulates the "physical" terminals that were used in order to send commands to computers back in 70's
+# The actual program running inside a terminal is called a "shell": It is a command line interpreter and main tool to communicate with the operating system
+# There are many type of shell programs written for *nix and Linux environment
+# The default shell in Linux is Bash (Bourne Again SHell)
+# Ability to manipulate the computer by entering interactive commands into the shell is one level higher than interacting with the GUIs:
+# You can control/fine tune your commands with many options/flags/arguments
+# You can save those commands to recreate same steps later easily
+# You can combine those commands into a coherent whole called "scripts" that runs as a non-interactive program that requires no user interaction: So you can automate everything on PC
+
+
+
+# This week we start with 

@@ -85,7 +85,7 @@ EOF
 
 ## make postgresql up and running
 
-echo "postgres:bda505" | chpasswd # change password of postgres
+echo "postgres:***" | chpasswd # change password of postgres
 
 # create en empty directory for tablespace
 mkdir /home/bda505/pg
@@ -112,7 +112,7 @@ CREATE TABLESPACE pg LOCATION '/home/bda505/pg';
 # change the password of postgres user
 # note that this is database user
 # previous one was operating system user
-ALTER USER postgres WITH PASSWORD 'bda505';
+ALTER USER postgres WITH PASSWORD '***';
 
 # create a new empty database imdb in pg tablespace
 CREATE DATABASE imdb
