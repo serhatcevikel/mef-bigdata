@@ -16,6 +16,6 @@ principals_molten <- principals[, {principalCast_list = strsplit(principalCast, 
                                          principalCast = unlist(principalCast_list))}]
 
 
-out_path <- sprintf("%s/data/imdb/tsv/title.principals_melt.tsv", prefix) # create output file path
+out_path <- sprintf("%s/tsv/title.principals_melt.tsv", prefix) # create output file path
 
 fwrite(principals_molten, file = out_path, sep = "\t") # fast write new DT as tsv
