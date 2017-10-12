@@ -45,9 +45,13 @@
 ## Our current environment has the following components:
 
 # pgAdmin III GUI client for PostgreSQL:
+
 # On the terminal execute:
 
+
 pgadmin3 &
+
+
 
 # The ampersand sign ("&") after the command makes the terminal windows available after the command is sent, when the command opens a detached GUI windows
 # GUI is the abbrevation of "graphical user interface"
@@ -60,20 +64,32 @@ pgadmin3 &
 # Sometimes SQL language does not suffice: Although advanced features like procedural languages extend SQL beyond its querying capabilities
 # It is better and easier to create more complicated procedures using a high level language such as R or Python - and still interact with PostgreSQL server
 # We have rstudio in order to write, debug and execute R code:
+
 # On the terminal execute:
+
+
 rstudio &
+
+
 
 # To start a "vanilla" R console on the terminal:
 
+
 R
+
 
 # quit R console:
 
+
 q()
 
+
 # We have PyCharm to write, debug and execute Python code:
+# On the terminal:
+
 
 pycharm &
+
 
 # Note that if any program has letters "py" in it, it is strongly probable that, it is a module/program written in/for Python language
 
@@ -85,33 +101,48 @@ pycharm &
 # In our environments, Vim program is available
 # On the terminal execute:
 
+
 vim
 
-# to enter editing mode
+
+# to enter editing mode:
+
 
 i
 
+
 # to exit editing mode and enter command mode (commands are one/two letter shortcuts called key bindings in vim!)
+
 
 [Esc]
 
+
 # quit vim without saving (first enter command mode by [Esc]) 
 
+
 :q!
+
 
 # According to the following blog post, "How to exit Vim editor" is among the most frequently asked questions on stackoverflow:
 # By the way our default web browser is Firefox:
 
+# On the terminal:
+
+
 firefox https://stackoverflow.blog/2017/05/23/stack-overflow-helping-one-million-developers-exit-vim/ &
+
 
 # Unfortunately, Turkey is the second country to be most frequent asker of that question! From now on, you know how to quit Vim!
 # Vim is so ubiquitous in coding/data world that, many programs/editors/IDE's - including Bash and rstudio - provide an option to accept Vim key bindings
 
 # And sometimes we would like to prototype our code in short snippets and see the output of each snippet in a linear fashion along with the code
 # Jupyter is a perfect tool for such kind of a development approach
+
 # On the terminal:
 
+
 jupyter notebook
+
 
 # See, a browser windows is automatically opened
 # Now you can check "New" on the right top and select Python, R or Bash (Shell interpreter for Linux) so that a new "kernel" for that language is initiated
@@ -132,41 +163,52 @@ jupyter notebook
 # Note that, latest version of PostgreSQL available is 10, released in 5th of October - just a week ago.
 # However in *ubuntu repos, this latest verison is not updated yet, and latest available version is 9.6 - released on the 31th of August, 2017.
 # So we will refer to the official documentation of the 9.6 version at:
+
 # On the terminal:
+
 
 firefox https://www.postgresql.org/docs/9.6/static/index.html &
 
+
 # Because of the way your working environment is configured, the OS will check for the new version of all packages/programs installed through "apt" package manager on every reboot by a cron job
 # In order to check the current version of PostgreSQL server (not the client interface pgAdmin III):
+
 # On SQL editor:
 
 SELECT version();
+
 
 # The output is:
 # "PostgreSQL 9.6.5 on x86_64-pc-linux-gnu, compiled by gcc (Ubuntu 6.3.0-12ubuntu2) 6.3.0 20170406, 64-bit"
 
 
-
 ## First let's delete the table "title_basics" we had created at the end of the last session with "DROP TABLE" command:
 # On SQL editor:
 
+
 DROP TABLE title_basics;
+
 
 # According to PostgreSQL official documentation: "DROP TABLE removes tables from the database"
 
 # The output is sth like:
 # Query returned successfully with no result in 27 msec.
 # For more info on DROP TABLE:
+
 # On the terminal:
+
 
 firefox https://www.postgresql.org/docs/9.6/static/sql-droptable.html &
 
 
 # Now we have no more tables left in our database, so the database size should be minimal
 # Let's check the database size with "SELECT" command and system administration functions:
+
 # On SQL editor:
 
+
 SELECT pg_size_pretty(pg_database_size('imdb'));
+
 
 # Output is:
 # "7087 kB"
@@ -176,36 +218,50 @@ SELECT pg_size_pretty(pg_database_size('imdb'));
 # pg_size_pretty(bigint) 	text 	Converts a size in bytes expressed as a 64-bit integer into a human-readable format with size units
 
 # For further information on system administration functions, follow:
+# On the terminal:
+
 
 firefox https://www.postgresql.org/docs/9.6/static/functions-admin.html &
 
 
 # As new data is written, and existing data is modified and/or deleted from the database, some garbage is collected inside the database because of "dead tuples" - deleted records that still occupy a space on disk
 # We should periodically "maintain" our database by at least cleaning the garbage by "VACUUM" command:
+
 # On SQL editor:
 
+
 VACUUM FULL;
+
 
 # According to PostgreSQL official documentation: "VACUUM reclaims storage occupied by dead tuples."
 # "In normal PostgreSQL operation, tuples that are deleted or obsoleted by an update are not physically removed from their table;
 # "they remain present until a VACUUM is done"
 # More info on VACUUM command at:
+# On the terminal:
+
 
 firefox https://www.postgresql.org/docs/9.6/static/sql-vacuum.html &
+
 
 # Output is:
 # Query returned successfully with no result in 1.6 secs.
 
 # Now rerun the previous command:
+
 # On SQL editor:
 
+
 SELECT pg_size_pretty(pg_database_size('imdb'));
+
 
 # Output is:
 # "5833 kB"
 
 # Now let's repeat the command to create an empty table with necessary fields (with types):
+
 # On SQL editor:
+
+
 
 CREATE TABLE title_basics
 (
@@ -220,42 +276,60 @@ CREATE TABLE title_basics
   genres text
 );
 
+
+
 # According to PostgreSQL official documentation: "CREATE TABLE will create a new, initially empty table in the current database."
 # "The table will be owned by the user issuing the command."
 # More info on "CREATE TABLE" command at:
+# On the terminal:
+
 
 firefox https://www.postgresql.org/docs/9.6/static/sql-createtable.html &
+
 
 # Output is:
 # Query returned successfully with no result in 23 msec.
 
 # Now let's import data from file again:
+
 # On SQL editor:
 
+
 COPY title_basics FROM '/home/bda505/mef/01/Session_01_dataset/tsv/title.basics2.tsv';
+
 
 # According to PostgreSQL official documentation: "COPY moves data between PostgreSQL tables and standard file-system files."
 # "COPY TO copies the contents of a table to a file, while COPY FROM copies data from a file to a table (appending the data to whatever is in the table already)."
 # More info on COPY at:
+# On the terminal:
+
 
 firefox https://www.postgresql.org/docs/9.6/static/sql-copy.html &
+
 
 # Output is:
 # Query returned successfully: 4534354 rows affected, 7.1 secs execution time.
 
 # We can preview the head of the imported data from right clicking the table from object browser and clicking View Data
 # But let's do it the SQL way with a SELECT command:
+
 # On SQL editor:
+
 
 SELECT *
 FROM title_basics
 LIMIT 5;
 
+
 # According to PostgreSQL official documentation: "SELECT retrieves rows from zero or more tables."
 # Select is a very versatile command that we will use extensively
 # More information at:
 
+# On the terminal:
+
+
 firefox https://www.postgresql.org/docs/9.6/static/sql-select.html &
+
 
 # In plain english, this command says:
 # Select all ("*") columns
@@ -279,7 +353,11 @@ firefox https://www.postgresql.org/docs/9.6/static/sql-select.html &
 
 # First "DELETE" all data:
 
+# On SQL editor:
+
+
 DELETE FROM title_basics;
+
 
 # Output is:
 # Query returned successfully: 4534354 rows affected, 7.7 secs execution time.
@@ -289,19 +367,30 @@ DELETE FROM title_basics;
 # "DELETE deletes rows that satisfy the WHERE clause from the specified table."
 # "If the WHERE clause is absent, the effect is to delete all rows in the table. The result is a valid, but empty table."
 # More info at:
+# On the terminal:
+
 
 firefox https://www.postgresql.org/docs/9.6/static/sql-delete.html &
 
+
 # Now let's import the data again with the same command:
 
+# On SQL editor:
+
+
 COPY title_basics FROM '/home/bda505/mef/01/Session_01_dataset/tsv/title.basics2.tsv';
+
 
 # Output is:
 # Query returned successfully: 4534354 rows affected, 7.5 secs execution time.
 
 # Now do the "flushing" with "TRUNCATE" statement:
 
+# On SQL editor:
+
+
 TRUNCATE title_basics;
+
 
 # Output is:
 # Query returned successfully with no result in 1.1 secs.
@@ -311,43 +400,60 @@ TRUNCATE title_basics;
 # "TRUNCATE quickly removes all rows from a set of tables. It has the same effect as an unqualified DELETE on each table, but since it does not actually scan the tables it is faster."
 # "Furthermore, it reclaims disk space immediately, rather than requiring a subsequent VACUUM operation. This is most useful on large tables."
 # For more info:
+# On the terminal:
+
 
 firefox https://www.postgresql.org/docs/9.6/static/sql-truncate.html &
 
+
 # Now first VACUUM and import the data again
 # Note that VACUUM throws an error when executed together with another SQL command. It must be executed separately
+
 # On SQL editor:
 
+
 VACUUM FULL;
+
 
 # Output:
 # Query returned successfully with no result in 6.2 secs.
 
-
 # On SQL editor:
+
+
 COPY title_basics FROM '/home/bda505/mef/01/Session_01_dataset/tsv/title.basics2.tsv';
+
 
 # Output:
 # Query returned successfully: 4534354 rows affected, 6.0 secs execution time.
 
 # Now, with a mistake, run the query again!
+# On SQL editor:
+
+
 COPY title_basics FROM '/home/bda505/mef/01/Session_01_dataset/tsv/title.basics2.tsv';
 
 
 # Great, but we forgot sth:
 # Define a primary key on the table and put a constraint on the uniqueness of that key
 # But no problem we can ALTER anything in the table after it is first created
+
 # On SQL editor:
+
 
 ALTER TABLE title_basics
 ADD CONSTRAINT tconst_pk 
 PRIMARY KEY (tconst);
 
+
 # According to PostgreSQL official documentation:
 # "ALTER TABLE changes the definition of an existing table."
 # For more info:
+# On terminal:
+
 
 firefox https://www.postgresql.org/docs/9.6/static/sql-altertable.html &
+
 
 # But the execution of the statement throws an error:
 
@@ -362,8 +468,11 @@ firefox https://www.postgresql.org/docs/9.6/static/sql-altertable.html &
 # It seems that tconst field - that is supposed to be unique, is not unique!
 
 # First, let's get the row count of the table using SQL
+# On SQL editor:
+
 
 SELECT count(*) FROM title_basics;
+
 
 # 9068708
 
@@ -376,6 +485,8 @@ SELECT count(*) FROM title_basics;
 # And import data
 
 # On SQL editor:
+
+
 
 DROP TABLE title_basics;
 
@@ -398,15 +509,19 @@ CONSTRAINT tconst_pk
 
 COPY title_basics FROM '/home/bda505/mef/01/Session_01_dataset/tsv/title.basics2.tsv';
 
+
+
 # Output:
 # Query returned successfully: 4534354 rows affected, 26.1 secs execution time.
 
 # Because of the uniqueness check in primary key, this time the query takes more time
 
 Let's compare this row count with that of the input file:
-# On shell:
+# On terminal:
+
 
 cat $dataset01/tsv/title.basics2.tsv | wc -l
+
 
 # Output:
 # 4534354
@@ -414,9 +529,12 @@ cat $dataset01/tsv/title.basics2.tsv | wc -l
 # We see that tconst was in fact a field that satisfies uniquenes condition
 
 # Now let's try to import the data again into the table!
+
 # On SQL editor:
 
+
 COPY title_basics FROM '/home/bda505/mef/01/Session_01_dataset/tsv/title.basics2.tsv';
+
 
 # Output:
 # ERROR:  duplicate key value violates unique constraint "tconst_pk"
@@ -433,9 +551,12 @@ COPY title_basics FROM '/home/bda505/mef/01/Session_01_dataset/tsv/title.basics2
 # This time duplicate values are not allowed
 
 # Check the row count again:
+
 # On SQL editor:
 
+
 SELECT count(*) FROM title_basics;
+
 
 # Output:
 # 4534354
@@ -444,15 +565,27 @@ SELECT count(*) FROM title_basics;
 
 # Now check size of db, VACUUM and check size again:
 
+# On SQL editor:
+
+
 SELECT pg_size_pretty(pg_database_size('imdb'));
+
 
 # "659 MB"
 
+# On SQL editor:
+
+
 VACUUM FULL;
+
 
 # Query returned successfully with no result in 9.9 secs.
 
+# On SQL editor:
+
+
 SELECT pg_size_pretty(pg_database_size('imdb'));
+
 
 # "659 MB"
 
@@ -482,10 +615,481 @@ for line in "${files[@]}"; # across the selected filenames
 		diff $line $line2; # print the differences between first and second files
 	done
 
-# We save in to delete_first_lines.sh
-# We make this script executable by:
-chmod +x delete_first_lines.sh
+# We save this script into delete_first_lines.sh
+# And make this file executable by:
 
-# And execute it from the path:
-./delete_first_lines.sh
+# On the terminal:
 
+
+chmod +x /home/bda505/mef-bigdata/week_02/delete_first_lines.sh
+
+
+# And execute it with its path:
+
+# On the terminal:
+
+
+/home/bda505/mef-bigdata/week_02/delete_first_lines.sh
+
+
+# See first and second files' line counts differ by only 1
+# And the diff command returns only the deleted first line
+# So we are on the correct path!
+
+# Now we will go on importing other tables
+# Note that constraint names must be different for each table
+
+
+
+## For title.crew2.tsv
+## On SQL editor:
+
+
+
+CREATE TABLE title_crew
+(
+  tconst text,
+  directors text,
+  writers text,
+
+CONSTRAINT tconst_pk_02
+   PRIMARY KEY (tconst)
+);
+
+COPY title_crew FROM '/home/bda505/mef/01/Session_01_dataset/tsv/title.crew2.tsv';
+
+SELECT *
+FROM title_crew
+LIMIT 5;
+
+
+
+## For title.principals_melt2.tsv
+## On SQL editor:
+## Note that tconst is not unique in this table but tconst + principalCast is
+
+
+
+CREATE TABLE title_principals_melt
+(
+  tconst text,
+  principalCast text,
+
+CONSTRAINT tconst_pk_03
+   PRIMARY KEY (tconst, principalCast),
+
+);
+
+COPY title_principals_melt FROM '/home/bda505/mef/01/Session_01_dataset/tsv/title.principals_melt2.tsv';
+
+SELECT *
+FROM title_principals_melt
+LIMIT 5;
+
+
+
+# Output
+# Total query runtime: 02:09 minutes
+# 5 rows retrieved.
+
+
+
+## For title.ratinsg2.tsv
+## On Numeric Data types:
+# integer: -2147483648 to +2147483647
+# numeric: up to 131072 digits before the decimal point; up to 16383 digits after the decimal point
+# For more info:
+# On the terminal:
+
+
+firefox https://www.postgresql.org/docs/9.6/static/datatype-numeric.html &
+
+
+## On SQL editor:
+
+
+
+CREATE TABLE title_ratings
+(
+  tconst text,
+  averageRating numeric,
+  numVotes integer,
+
+CONSTRAINT tconst_pk_04
+   PRIMARY KEY (tconst)
+
+);
+
+COPY title_ratings FROM '/home/bda505/mef/01/Session_01_dataset/tsv/title.ratings2.tsv';
+
+SELECT *
+FROM title_ratings
+LIMIT 5;
+
+
+
+## For name.basics2.tsv
+
+## On SQL editor:
+
+
+CREATE TABLE name_basics
+(
+  nconst text,
+  primaryName text,
+  birthYear integer,
+  deathYear integer,
+  primaryProfession text,
+  knownForTitles text,
+
+CONSTRAINT tconst_pk_05
+   PRIMARY KEY (nconst)
+
+);
+
+COPY name_basics FROM '/home/bda505/mef/01/Session_01_dataset/tsv/name.basics2.tsv';
+
+SELECT *
+FROM name_basics
+LIMIT 5;
+
+
+
+# Output:
+# Total query runtime: 40.6 secs
+# 5 rows retrieved.
+
+
+## For title.episode2.tsv
+
+## On SQL editor:
+
+
+
+CREATE TABLE title_episode
+(
+  tconst text,
+  parentTconst text,
+  seasonNumber integer,
+  episodeNumber integer,
+
+CONSTRAINT tconst_pk_06
+   PRIMARY KEY (tconst)
+
+);
+
+COPY title_episode FROM '/home/bda505/mef/01/Session_01_dataset/tsv/title.episode2.tsv';
+
+SELECT *
+FROM title_episode
+LIMIT 5;
+
+
+# Output:
+# Total query runtime: 12.6 secs
+# 5 rows retrieved.
+
+
+# get the size again
+
+# On SQL editor:
+
+
+SELECT pg_size_pretty(pg_database_size('imdb'));
+
+
+# Output:
+# "4540 MB"
+
+
+## NOW IT IS TIME TO RUN SOME SELECT QUERIES FOR JOINING DIFFERENT TABLES!
+
+# First let's make sth easier
+# Select all titles which include "Godfather" and "Part" words in it, with any number of character before, between or after
+# Report tconst id, original title, start year, run time in minutes and genres
+# Order them by increasing runtimeminutes:
+
+# On SQL editor:
+
+
+
+SELECT tconst, originaltitle, startyear, runtimeminutes, genres
+  FROM title_basics
+  WHERE originaltitle ~ '.*Godfather.*Part.*'
+  ORDER BY runtimeminutes;
+
+
+
+# Output:
+# Total query runtime: 5.7 secs
+# 10 rows retrieved.
+
+"tt5942862";"The Godfather vs. The Godfather Part II";2008;2;"Documentary,Short"
+"tt5280194";"Storyboards: The Godfather Part III";2001;4;"Short"
+"tt6620222";"The Godfather: Part II";2017;12;"Documentary"
+"tt0539894";"The Godfather: Part 3";1987;30;"Comedy,Drama"
+"tt0099674";"The Godfather: Part III";1990;162;"Crime,Drama"
+"tt0071562";"The Godfather: Part II";1974;202;"Crime,Drama"
+"tt4667260";"The Godfather Part IV";2015;;"Drama"
+"tt2255475";"The Rise and Fall of a Godfather: Part 2";1992;;"News"
+"tt6083390";"The Godfather Part III/Kindergarten Cop/The Bonfire of the Vanities/The Russia House";1990;;"Talk-Show"
+
+# In fact we are not concerned with documentaries, shorts and comedy movies
+# So we should include only dramas and exclude comedies
+
+# On SQL editor:
+
+
+
+SELECT tconst, originaltitle, startyear, runtimeminutes, genres
+  FROM title_basics
+  WHERE originaltitle ~ '.*Godfather.*Part.*'
+	AND genres ~ 'drama'
+  ORDER BY runtimeminutes;
+
+
+
+# Total query runtime: 5.8 secs
+# 0 rows retrieved.
+
+# The query did not return any rows?
+# Why?
+# Because regex pattern search is case sensitive unless otherwise states
+# and "drama" does not match "Drama" 
+# In order to make the search case insensitive we add (?i) at the beginnin of the pattern:
+
+# On SQL editor:
+
+
+
+SELECT tconst, originaltitle, startyear, runtimeminutes, genres
+  FROM title_basics
+  WHERE originaltitle ~ '.*Godfather.*Part.*'
+	AND genres ~ '(?i)drama'
+  ORDER BY runtimeminutes;
+
+
+
+# Output:
+# Total query runtime: 5.7 secs
+# 4 rows retrieved.
+
+"tt0539894";"The Godfather: Part 3";1987;30;"Comedy,Drama"
+"tt0099674";"The Godfather: Part III";1990;162;"Crime,Drama"
+"tt0071562";"The Godfather: Part II";1974;202;"Crime,Drama"
+"tt4667260";"The Godfather Part IV";2015;;"Drama"
+
+# We still have comedy. Now we enhance the WHERE clause so that comedy is also excluded
+
+# On SQL editor:
+
+
+
+SELECT tconst, originaltitle, startyear, runtimeminutes, genres
+  FROM title_basics
+  WHERE originaltitle ~ '.*Godfather.*Part.*'
+	AND genres ~ '(?i)drama'
+	AND NOT genres ~ '(?i)comedy'
+  ORDER BY runtimeminutes;
+
+
+
+# Total query runtime: 5.8 secs
+#3 rows retrieved.
+
+"tt0099674";"The Godfather: Part III";1990;162;"Crime,Drama"
+"tt0071562";"The Godfather: Part II";1974;202;"Crime,Drama"
+"tt4667260";"The Godfather Part IV";2015;;"Drama"
+
+# That's ok but we only want titles from the original trilogy last of which was screened in 1990
+
+# On SQL editor:
+
+
+
+SELECT tconst, originaltitle, startyear, runtimeminutes, genres
+  FROM title_basics
+  WHERE originaltitle ~ '.*Godfather.*Part.*'
+	AND genres ~ '(?i)drama'
+	AND NOT genres ~ '(?i)comedy'
+	AND startyear <= 1990
+  ORDER BY runtimeminutes;
+
+
+
+# Output:
+# Total query runtime: 5.9 secs
+# 2 rows retrieved. 
+
+"tt0099674";"The Godfather: Part III";1990;162;"Crime,Drama"
+"tt0071562";"The Godfather: Part II";1974;202;"Crime,Drama"
+
+# There, we have what we want for further queries
+
+# Note that regex or regexp (regular expressions) is a domain specific querying language
+# And a very powerful tool for mining, querying and manipulating textual data
+# And is worth spending effort to learn if you deal with textual data
+
+# This tutorial is a good starting point:
+# On the terminal:
+
+
+firefox http://www.regular-expressions.info/tutorial.html &
+
+
+# And this site if for testing regex patterns on some text:
+# On the terminal
+
+
+firefox https://regex101.com/ &
+
+
+# And this competition website if good for progressing in regex and having fun at the same time:
+# On the terminal:
+
+
+firefox https://regexcrossword.com/ &
+
+
+Now we would like to join this data with id's of principal cast
+
+# On SQL editor:
+
+
+
+SELECT title_basics.tconst, title_basics.originaltitle, title_basics.startyear,
+title_basics.runtimeminutes, title_basics.genres, title_principals_melt.principalcast
+  FROM title_basics LEFT JOIN title_principals_melt ON title_basics.tconst=title_principals_melt.tconst
+  WHERE title_basics.originaltitle ~ '.*Godfather.*Part.*'
+	AND title_basics.genres ~ '(?i)drama'
+	AND NOT title_basics.genres ~ '(?i)comedy'
+	AND title_basics.startyear <= 1990
+  ORDER BY title_basics.runtimeminutes;
+
+
+
+# Output:
+# Total query runtime: 5.7 secs
+# 20 rows retrieved.
+
+
+"tt0099674";"The Godfather: Part III";1990;162;"Crime,Drama";"nm0932336"
+"tt0099674";"The Godfather: Part III";1990;162;"Crime,Drama";"nm0000199"
+"tt0099674";"The Godfather: Part III";1990;162;"Crime,Drama";"nm0000338"
+"tt0099674";"The Godfather: Part III";1990;162;"Crime,Drama";"nm0000412"
+"tt0099674";"The Godfather: Part III";1990;162;"Crime,Drama";"nm0000473"
+"tt0099674";"The Godfather: Part III";1990;162;"Crime,Drama";"nm0001735"
+"tt0099674";"The Godfather: Part III";1990;162;"Crime,Drama";"nm0178874"
+"tt0099674";"The Godfather: Part III";1990;162;"Crime,Drama";"nm0296636"
+"tt0099674";"The Godfather: Part III";1990;162;"Crime,Drama";"nm0539794"
+"tt0099674";"The Godfather: Part III";1990;162;"Crime,Drama";"nm0701374"
+"tt0071562";"The Godfather: Part II";1974;202;"Crime,Drama";"nm0000065"
+"tt0071562";"The Godfather: Part II";1974;202;"Crime,Drama";"nm0000134"
+"tt0071562";"The Godfather: Part II";1974;202;"Crime,Drama";"nm0000199"
+"tt0071562";"The Godfather: Part II";1974;202;"Crime,Drama";"nm0000338"
+"tt0071562";"The Godfather: Part II";1974;202;"Crime,Drama";"nm0000380"
+"tt0071562";"The Godfather: Part II";1974;202;"Crime,Drama";"nm0000473"
+"tt0071562";"The Godfather: Part II";1974;202;"Crime,Drama";"nm0539794"
+"tt0071562";"The Godfather: Part II";1974;202;"Crime,Drama";"nm0548943"
+"tt0071562";"The Godfather: Part II";1974;202;"Crime,Drama";"nm0701374"
+"tt0071562";"The Godfather: Part II";1974;202;"Crime,Drama";"nm0932336"
+
+
+# We could also get the same result by running a subquery
+# A subquery is a query with a alias (a name) and executed inside another query
+# Using the alis, the subquery results can be treated as a separate table
+# On SQL editor:
+
+
+
+SELECT subq1.*, title_principals_melt.principalcast
+  FROM
+(
+SELECT tconst, originaltitle, startyear, runtimeminutes, genres
+  FROM title_basics
+  WHERE originaltitle ~ '.*Godfather.*Part.*'
+	AND genres ~ '(?i)drama'
+	AND NOT genres ~ '(?i)comedy'
+	AND startyear <= 1990
+  ORDER BY runtimeminutes
+) subq1
+
+LEFT JOIN title_principals_melt ON subq1.tconst=title_principals_melt.tconst;
+
+
+
+# Output:
+# Total query runtime: 5.5 secs
+# 20 rows retrieved.
+
+
+"tt0099674";"The Godfather: Part III";1990;162;"Crime,Drama";"nm0000199"
+"tt0099674";"The Godfather: Part III";1990;162;"Crime,Drama";"nm0000338"
+"tt0099674";"The Godfather: Part III";1990;162;"Crime,Drama";"nm0000412"
+"tt0099674";"The Godfather: Part III";1990;162;"Crime,Drama";"nm0000473"
+"tt0099674";"The Godfather: Part III";1990;162;"Crime,Drama";"nm0001735"
+"tt0099674";"The Godfather: Part III";1990;162;"Crime,Drama";"nm0178874"
+"tt0099674";"The Godfather: Part III";1990;162;"Crime,Drama";"nm0296636"
+"tt0099674";"The Godfather: Part III";1990;162;"Crime,Drama";"nm0539794"
+"tt0099674";"The Godfather: Part III";1990;162;"Crime,Drama";"nm0701374"
+"tt0099674";"The Godfather: Part III";1990;162;"Crime,Drama";"nm0932336"
+"tt0071562";"The Godfather: Part II";1974;202;"Crime,Drama";"nm0000065"
+"tt0071562";"The Godfather: Part II";1974;202;"Crime,Drama";"nm0000134"
+"tt0071562";"The Godfather: Part II";1974;202;"Crime,Drama";"nm0000199"
+"tt0071562";"The Godfather: Part II";1974;202;"Crime,Drama";"nm0000338"
+"tt0071562";"The Godfather: Part II";1974;202;"Crime,Drama";"nm0000380"
+"tt0071562";"The Godfather: Part II";1974;202;"Crime,Drama";"nm0000473"
+"tt0071562";"The Godfather: Part II";1974;202;"Crime,Drama";"nm0539794"
+"tt0071562";"The Godfather: Part II";1974;202;"Crime,Drama";"nm0548943"
+"tt0071562";"The Godfather: Part II";1974;202;"Crime,Drama";"nm0701374"
+"tt0071562";"The Godfather: Part II";1974;202;"Crime,Drama";"nm0932336"
+
+
+## Now let's do sth more complicated
+# Starting with first option (not the subquery), let's make a three way join
+# First join titles and principal cast on title id's (tconst)
+# And then join principal cast and name basics on name id's (nconst)
+# Filter only for actors and actresses
+# And sort on first names (ascendng) then title years
+
+# On SQL editor:
+
+
+
+SELECT title_basics.tconst, title_basics.originaltitle, title_basics.startyear, title_basics.runtimeminutes,
+	title_basics.genres, title_principals_melt.principalcast, name_basics.primaryname,
+	name_basics.birthyear, name_basics.deathyear, name_basics.primaryprofession
+
+FROM title_basics LEFT JOIN title_principals_melt ON title_basics.tconst=title_principals_melt.tconst
+	LEFT JOIN name_basics ON title_principals_melt.principalcast=name_basics.nconst
+
+WHERE title_basics.originaltitle ~ '.*Godfather.*Part.*'
+	AND title_basics.genres ~ '(?i)drama'
+	AND NOT title_basics.genres ~ '(?i)comedy'
+	AND title_basics.startyear <= 1990
+	AND name_basics.primaryprofession ~'actor|actress'
+
+ORDER BY name_basics.primaryname, title_basics.startyear DESC;
+
+
+
+# Total query runtime: 5.7 secs
+# 8 rows retrieved.
+
+
+
+"tt0099674";"The Godfather: Part III";1990;162;"Crime,Drama";"nm0000199";"Al Pacino";1940;;"actor,soundtrack,director"
+"tt0071562";"The Godfather: Part II";1974;202;"Crime,Drama";"nm0000199";"Al Pacino";1940;;"actor,soundtrack,director"
+"tt0099674";"The Godfather: Part III";1990;162;"Crime,Drama";"nm0000412";"Andy Garcia";1956;;"actor,producer,soundtrack"
+"tt0099674";"The Godfather: Part III";1990;162;"Crime,Drama";"nm0000473";"Diane Keaton";1946;;"actress,producer,director"
+"tt0071562";"The Godfather: Part II";1974;202;"Crime,Drama";"nm0000473";"Diane Keaton";1946;;"actress,producer,director"
+"tt0071562";"The Godfather: Part II";1974;202;"Crime,Drama";"nm0000134";"Robert De Niro";1943;;"actor,producer,soundtrack"
+"tt0071562";"The Godfather: Part II";1974;202;"Crime,Drama";"nm0000380";"Robert Duvall";1931;;"actor,producer,soundtrack"
+"tt0099674";"The Godfather: Part III";1990;162;"Crime,Drama";"nm0001735";"Talia Shire";1946;;"actress,producer,director"
+
+
+# WITH THIS STATEMENT WE JOINED THREE TABLES, FILTERED DATA BASED ON 5 DIFFERENT CRITERIA, FILTERED ON TWO FIELDS AND SELECTED 10 FIELDS
+
+# IT IS VERY HAPPY THAT 9TH FIELD (DEATH YEAR) IS ALL EMPTY!
+
+# THANKS!
