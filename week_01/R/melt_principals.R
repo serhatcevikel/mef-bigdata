@@ -5,8 +5,8 @@
 
 library(data.table) # load data.table package
 
-prefix <- Sys.getenv("fls") # get the environment variable - a path prefix - "fls"
-in_path <- sprintf("%s/data/imdb/tsv/title.principals.tsv", prefix) # create the path to input file
+prefix <- Sys.getenv("dataset01") # get the environment variable - a path prefix - "fls"
+in_path <- sprintf("%s/tsv/title.principals.tsv", prefix) # create the path to input file
 
 principals <- fread(in_path) # fast read input file into DT
 
@@ -16,6 +16,6 @@ principals_molten <- principals[, {principalCast_list = strsplit(principalCast, 
                                          principalCast = unlist(principalCast_list))}]
 
 
-out_path <- sprintf("%s/data/imdb/tsv/title.principals2.tsv", prefix) # create output file path
+out_path <- sprintf("%s/data/imdb/tsv/title.principals_melt.tsv", prefix) # create output file path
 
 fwrite(principals_molten, file = out_path, sep = "\t") # fast write new DT as tsv
