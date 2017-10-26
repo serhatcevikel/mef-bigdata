@@ -676,7 +676,7 @@ CREATE TABLE title_principals_melt
   principalCast text,
 
 CONSTRAINT tconst_pk_03
-   PRIMARY KEY (tconst, principalCast),
+   PRIMARY KEY (tconst, principalCast)
 
 );
 
@@ -997,7 +997,7 @@ title_basics.runtimeminutes, title_basics.genres, title_principals_melt.principa
 
 # We could also get the same result by running a subquery
 # A subquery is a query with a alias (a name) and executed inside another query
-# Using the alis, the subquery results can be treated as a separate table
+# Using the alias, the subquery results can be treated as a separate table
 # On SQL editor:
 
 

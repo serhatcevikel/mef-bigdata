@@ -5,7 +5,8 @@
 
 library(data.table) # load data.table package
 
-prefix <- "/home/bda505/mef/01/Session_01_dataset" # get the environment variable - a path prefix - "fls"
+prefix <- Sys.getenv("dataset01")
+#prefix <- "/home/bda505/mef/01/Session_01_dataset" # get the environment variable - a path prefix - "fls"
 in_path <- sprintf("%s/tsv/title.principals.tsv", prefix) # create the path to input file
 
 principals <- fread(in_path) # fast read input file into DT

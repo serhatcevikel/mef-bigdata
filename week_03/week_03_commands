@@ -1,3 +1,8 @@
+# Now let's rewrite the previous query with common table expressions (CTE) (aka "WITH" queries)
+# With CTE, we run a subquery or multiple subqueries before the main query, name it/them, refer to other subqueries with those names
+# And reuse the subqueries in multiple places in the main query - referring by its name, since PostgreSQL stores the results of subqueries
+# Just like a table!
+
 WITH basics_principles AS
 (
 SELECT title_basics.tconst, title_basics.originaltitle, title_basics.startyear, title_basics.runtimeminutes,
@@ -18,3 +23,18 @@ WHERE basics_principles.originaltitle ~ '.*Godfather.*Part.*'
 
 ORDER BY name_basics.primaryname, basics_principles.startyear DESC;
 
+
+Result is:
+
+"tt0099674";"The Godfather: Part III";1990;162;"Crime,Drama";"nm0000199";"Al Pacino";1940;;"actor,soundtrack,director"
+"tt0071562";"The Godfather: Part II";1974;202;"Crime,Drama";"nm0000199";"Al Pacino";1940;;"actor,soundtrack,director"
+"tt0099674";"The Godfather: Part III";1990;162;"Crime,Drama";"nm0000412";"Andy Garcia";1956;;"actor,producer,soundtrack"
+"tt0099674";"The Godfather: Part III";1990;162;"Crime,Drama";"nm0000473";"Diane Keaton";1946;;"actress,producer,director"
+"tt0071562";"The Godfather: Part II";1974;202;"Crime,Drama";"nm0000473";"Diane Keaton";1946;;"actress,producer,director"
+"tt0071562";"The Godfather: Part II";1974;202;"Crime,Drama";"nm0000134";"Robert De Niro";1943;;"actor,producer,soundtrack"
+"tt0071562";"The Godfather: Part II";1974;202;"Crime,Drama";"nm0000380";"Robert Duvall";1931;;"actor,producer,soundtrack"
+"tt0099674";"The Godfather: Part III";1990;162;"Crime,Drama";"nm0001735";"Talia Shire";1946;;"actress,producer,director"
+
+
+## You can get more information on CTE / WITH queries:
+firefox https://www.postgresql.org/docs/9.6/static/queries-with.html &
