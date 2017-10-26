@@ -1,0 +1,20 @@
+WITH basics_principles AS
+(
+SELECT title_basics.tconst, title_basics.originaltitle, title_basics.startyear, title_basics.runtimeminutes,
+	title_basics.genres, title_principals_melt.principalcast
+FROM title_basics LEFT JOIN title_principals_melt ON title_basics.tconst=title_principals_melt.tconst
+)
+SELECT basics_principles.tconst, basics_principles.originaltitle, basics_principles.startyear, basics_principles.runtimeminutes,
+	basics_principles.genres, basics_principles.principalcast, name_basics.primaryname,
+	name_basics.birthyear, name_basics.deathyear, name_basics.primaryprofession
+
+FROM basics_principles LEFT JOIN name_basics ON basics_principles.principalcast=name_basics.nconst
+
+WHERE basics_principles.originaltitle ~ '.*Godfather.*Part.*'
+	AND basics_principles.genres ~ '(?i)drama'
+	AND NOT basics_principles.genres ~ '(?i)comedy'
+	AND basics_principles.startyear <= 1990
+	AND name_basics.primaryprofession ~'actor|actress'
+
+ORDER BY name_basics.primaryname, basics_principles.startyear DESC;
+

@@ -16,7 +16,7 @@ q()
 HERE
 
 # define a variable for dataset
-dataset01="/home/bda505/mef/01/Session_01_dataset"
+dataset01=/home/bda505/mef/01/Session_01_dataset
 
 # prepare the database
 # execute as bda505
