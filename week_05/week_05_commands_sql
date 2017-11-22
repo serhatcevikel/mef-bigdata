@@ -1,0 +1,27 @@
+# Return all the fields from title_basics and "averagerating" field from title_ratings of the "movies" that Al Pacino took role in
+# Exclude titles which have no "averagerating" info (with "IS NOT NULL" logical test)
+# Order by descending averageratings
+# Note that: In order to get the id of Al Pacino, from the name_basics table, you should check the "primaryname" field for equality with "Al Pacino" and birthyear with "1940"  
+# You can use multiple "common table expressions" (CTE) or "WITH" queries to simplify the main query
+# You can use aliases for tables to simplify your query (e.g. FROM title_basics tb)
+
+
+WITH pacino AS
+(
+SELECT nconst
+FROM name_basics nb
+WHERE nb.primaryname = 'Al Pacino'
+	AND nb.birthyear = 1940
+),
+t_ids AS
+(
+SELECT tp.tconst
+FROM pacino LEFT JOIN title_principals_melt tp ON pacino.nconst=tp.principalcast
+)
+SELECT tb.*, tr.averagerating
+FROM t_ids LEFT JOIN title_basics tb ON t_ids.tconst=tb.tconst
+	LEFT JOIN title_ratings tr ON tb.tconst=tr.tconst
+WHERE tb.titletype = 'movie'
+	AND tr.averagerating IS NOT NULL
+ORDER BY tr.averagerating DESC	
+
