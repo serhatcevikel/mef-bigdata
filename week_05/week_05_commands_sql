@@ -25,3 +25,52 @@ WHERE tb.titletype = 'movie'
 	AND tr.averagerating IS NOT NULL
 ORDER BY tr.averagerating DESC	
 
+
+
+AN EXERCISE:
+
+# Question:
+# Return all fields from title_basics for "movies" which feature Martin Scorsese as director and Robert De Niro as actor, sorted by ascending startyear
+#
+# You can use the file:
+# https://raw.githubusercontent.com/serhatcevikel/mef-bigdata/master/week_05/imdb_dataset_description
+# To get an overall structure of the database (tables, fields)
+# You can also use the object browser from pgadmin3 to do the same
+
+# The structure of the query should be as such:
+# 
+# WITH ms_id AS
+# (
+# #### GET THE ID OF MARTIN SCORSESE FROM NAME_BASICS TABLE
+# #### MAKE SURE IT RETURNS A UNIQUE AND SINGLE VALUE
+# ),
+# ms_titles AS
+# )
+# #### GET THE IDS OF TITLES THAT SCORSESE DIRECTED FROM TITLE_CREW TABLE
+# ),
+# rdn_id AS
+# (
+# #### GET THE ID OF ROBERT THE NIRO FROM NAME_BASICS TABLE
+# #### MAKE SURE A SINGLE VALUE IS RETURNED
+# ),
+# rdn_titles AS
+# (
+# #### GET THE IDS OF TITLES THAT ROBERT DE NIRO TOOK PART IN FROM TITLE_PRINCIPALS_MELT TABLE
+# )
+# SELECT ....
+# #### "INNER JOIN" (ONLY COMMON RECORDS) MS_TITLES AND RDN_TITLES AND THEN "LEFT JOIN" INTO TITLE BASICS
+#
+
+# #### USE "FROM", "WHERE" AND "ORDER BY" CLAUSES WHERE NECESSARY
+
+# OUTPUT SHOULD BE AS SUCH:
+# "tt0070379"	"movie"	"Mean Streets"	"Mean Streets"	f	1973		112	"Crime,Drama,Thriller"
+# "tt0075314"	"movie"	"Taxi Driver"	"Taxi Driver"	f	1976		113	"Crime,Drama"
+# "tt0076451"	"movie"	"New York, New York"	"New York, New York"	f	1977		155	"Drama,Music,Musical"
+# "tt0081398"	"movie"	"Raging Bull"	"Raging Bull"	f	1980		129	"Biography,Drama,Sport"
+# "tt0085794"	"movie"	"The King of Comedy"	"The King of Comedy"	f	1982		109	"Comedy,Crime,Drama"
+# "tt0099685"	"movie"	"Goodfellas"	"Goodfellas"	f	1990		146	"Crime,Drama"
+# "tt0101540"	"movie"	"Cape Fear"	"Cape Fear"	f	1991		128	"Crime,Thriller"
+# "tt0112641"	"movie"	"Casino"	"Casino"	f	1995		178	"Crime,Drama"
+# "tt1302006"	"movie"	"The Irishman"	"The Irishman"	f	2018			"Biography,Crime,Drama"
+
