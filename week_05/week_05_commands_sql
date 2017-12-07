@@ -74,3 +74,32 @@ AN EXERCISE:
 # "tt0112641"	"movie"	"Casino"	"Casino"	f	1995		178	"Crime,Drama"
 # "tt1302006"	"movie"	"The Irishman"	"The Irishman"	f	2018			"Biography,Crime,Drama"
 
+
+WITH ms_id AS
+(
+SELECT nb.nconst
+FROM name_basics nb
+WHERE nb.primaryname = 'Martin Scorsese'
+	AND nb.primaryprofession ~ 'director'
+),
+ms_titles AS
+(
+SELECT tc.tconst
+FROM ms_id LEFT JOIN title_crew tc ON ms_id.nconst=tc.directors
+),
+rdn_id AS
+(
+SELECT nb.nconst
+FROM name_basics nb
+WHERE nb.primaryname = 'Robert De Niro'
+),
+rdn_titles AS
+(
+SELECT tp.tconst
+FROM rdn_id LEFT JOIN title_principals_melt tp ON rdn_id.nconst=tp.principalcast
+)
+SELECT tb.*
+FROM ms_titles INNER JOIN rdn_titles ON ms_titles.tconst=rdn_titles.tconst
+LEFT JOIN title_basics tb ON rdn_titles.tconst=tb.tconst
+WHERE tb.titletype = 'movie'
+ORDER BY tb.startyear
