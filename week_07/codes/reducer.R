@@ -1,7 +1,7 @@
 #!/usr/bin/Rscript
 
-#liness <- readLines(file("stdin"))
-liness <- readLines("mapped")
+liness <- readLines(file("stdin"))
+#liness <- readLines("mapped")
 
 keyval <- list()
 
