@@ -35,7 +35,7 @@ output <- output[order(keys),, drop = F]
 
 for (i in 1:nrow(output))
 {
-    pasted <- paste(output[i,], collapse = "\t")
+    pasted <- paste(output[i,], collapse = " ")
     cat(sprintf("%s\n", pasted))
 }
 
