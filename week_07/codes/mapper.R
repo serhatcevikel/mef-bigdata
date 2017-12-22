@@ -1,6 +1,7 @@
 #!/usr/bin/Rscript
 
-con <- file("stdin")
+#con <- file("stdin")
+con <- file("1910")
 liness <- readLines(con)
 #liness <- readLines("1901")
 close(con)
@@ -13,7 +14,8 @@ output <- cbind(year, temp)
 
 output <- output[temp != 9999 & qq %in% c(0, 1, 4, 5, 9),]
 
-for (i in 1:nrow(output))
+#for (i in 1:nrow(output))
+for (i in seq_along(output[,1]))
 {
     pasted <- paste(output[i,], collapse = "\t")
     cat(sprintf("%s\n", pasted))

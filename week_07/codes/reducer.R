@@ -8,7 +8,7 @@ close(con)
 
 keyval <- list()
 
-for (i in 1:length(liness))
+for (i in seq_along(liness))
 {
     linex <- unlist(strsplit(liness[i], split = "\t"))
     key <- linex[1]
@@ -36,7 +36,8 @@ output <- matrix(c(keys, vals), ncol = 2)
 output <- output[order(keys),, drop = F]
 
 
-for (i in 1:nrow(output))
+#for (i in 1:nrow(output))
+for (i in seq_along(output[,1]))
 {
     pasted <- paste(output[i,], collapse = "\t")
     cat(sprintf("%s\n", pasted))
