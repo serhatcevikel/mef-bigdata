@@ -1,13 +1,16 @@
 #!/usr/bin/Rscript
 
-liness <- readLines(file("stdin"))
+con <- file("stdin")
+liness <- readLines(con)
+#liness <- readLines(file("stdin"))
 #liness <- readLines("mapped")
+close(con)
 
 keyval <- list()
 
 for (i in 1:length(liness))
 {
-    linex <- unlist(strsplit(liness[i], split = " "))
+    linex <- unlist(strsplit(liness[i], split = "\t"))
     key <- linex[1]
     val <- as.numeric(linex[2])
 
@@ -35,7 +38,9 @@ output <- output[order(keys),, drop = F]
 
 for (i in 1:nrow(output))
 {
-    pasted <- paste(output[i,], collapse = " ")
+    pasted <- paste(output[i,], collapse = "\t")
     cat(sprintf("%s\n", pasted))
 }
 
+
+#prmatrix(output, rowlab=rep("", nrow(output)), collab=rep("", 2))
