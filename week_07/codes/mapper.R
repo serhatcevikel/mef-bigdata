@@ -1,7 +1,7 @@
 #!/usr/bin/Rscript
 
-#con <- file("stdin")
-con <- file("1910")
+con <- file("stdin")
+#con <- file("1910")
 liness <- readLines(con)
 #liness <- readLines("1901")
 close(con)
