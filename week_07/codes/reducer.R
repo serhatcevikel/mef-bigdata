@@ -1,9 +1,8 @@
 #!/usr/bin/Rscript
 
 con <- file("stdin")
+#com <- file("mapped")
 liness <- readLines(con)
-#liness <- readLines(file("stdin"))
-#liness <- readLines("mapped")
 close(con)
 
 keyval <- list()
@@ -35,13 +34,8 @@ vals <- as.numeric(unlist(keyval))
 output <- matrix(c(keys, vals), ncol = 2)
 output <- output[order(keys),, drop = F]
 
-
-#for (i in 1:nrow(output))
 for (i in seq_along(output[,1]))
 {
     pasted <- paste(output[i,], collapse = "\t")
     cat(sprintf("%s\n", pasted))
 }
-
-
-#prmatrix(output, rowlab=rep("", nrow(output)), collab=rep("", 2))
